@@ -3,14 +3,14 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using datingapp.api.Data;
-using datingapp.api.Dtos;
-using datingapp.api.models;
+using DatingApp.API.Data;
+using DatingApp.API.Dtos;
+using DatingApp.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace datingapp.api.Controllers
+namespace DatingApp.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -18,7 +18,6 @@ namespace datingapp.api.Controllers
     {
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
-
         public AuthController(IAuthRepository repo, IConfiguration config)
         {
             _config = config;
@@ -33,12 +32,12 @@ namespace datingapp.api.Controllers
             if (await _repo.UserExists(userForRegisterDto.Username))
                 return BadRequest("Username already exists");
 
-            var userToCreat = new User
+            var userToCreate = new User
             {
                 Username = userForRegisterDto.Username
             };
 
-            var createdUser = await _repo.Register(userToCreat, userForRegisterDto.Password);
+            var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
 
             return StatusCode(201);
         }
@@ -46,9 +45,7 @@ namespace datingapp.api.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
-            
-            
-            var userFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
+            var userFromRepo = await _repo.Login(userForLoginDto.Username, userForLoginDto.Password);
 
             if (userFromRepo == null)
                 return Unauthorized();
@@ -75,8 +72,9 @@ namespace datingapp.api.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return Ok(new {
-                token =tokenHandler.WriteToken(token)
+            return Ok(new
+            {
+                token = tokenHandler.WriteToken(token)
             });
         }
     }

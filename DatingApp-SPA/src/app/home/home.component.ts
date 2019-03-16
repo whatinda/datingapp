@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { template } from '@angular/core/src/render3';
+
 
 @Component({
   selector: 'app-home',
@@ -9,7 +9,6 @@ import { template } from '@angular/core/src/render3';
 })
 export class HomeComponent implements OnInit {
   registerMode = false;
-
 
   constructor(private http: HttpClient) { }
 
